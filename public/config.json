@@ -1,0 +1,50 @@
+{
+  "obs": {
+    "host": "localhost",
+    "port": 4444,
+    "password": "$up3rSecretP@ssw0rd"
+  },
+  "cams": [
+    {
+      "name": "North",
+      "ip": "172.20.1.32",
+      "user": "admin",
+      "password": "CTKLive!",
+      "presets": [
+        {
+          "name": "Pulpit",
+          "preset": 1,
+          "obsScene": "1 N Pulpit"
+        },
+        {
+          "name": "Michael",
+          "preset": 2,
+          "obsScene": "2 N Michael"
+        }
+      ]
+    },
+    {
+      "name": "South",
+      "ip": "172.20.1.31",
+      "user": "admin",
+      "password": "CTKLive!",
+      "presets": [
+        {
+          "name": "Pulpit",
+          "preset": 1,
+          "obsScene": "3 S Pulpit"
+        },
+        {
+          "name": "Michael",
+          "preset": 2,
+          "obsScene": "4 S Michael"
+        },
+        {
+          "name": "Communion",
+          "preset": 3,
+          "obsScene": "5 S Communion"
+        }
+      ]
+    }
+  ]
+}
