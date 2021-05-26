@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { CookiesProvider } from 'react-cookie';
 import './App.css';
-import { setOBSConfig, useCameraList, useErrorLog } from './AppState';
+import { logError, setOBSConfig, useCameraList, useErrorLog } from './AppState';
 import { CameraList, OBSConfig } from './CameraTypes';
 import CameraView from './CameraView';
 import { startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
@@ -34,13 +34,13 @@ const HomeApp = () => {
 
   useEffect(() => {
     const config = cookies.config;
-
+    logError('App', undefined);
     if (config) {
       try {
         setOBSConfig(config.obs as OBSConfig);
         setCameraList(config.cams as CameraList);
       } catch (e) {
-        console.log('Error parsing json: ' + e.message);
+        logError('App', 'Error parsing json: ' + e.message);
       }
     }
   }, [cookies, setCameraList]);
@@ -63,6 +63,7 @@ const HomeApp = () => {
       const json = event.target.result;
       const config = JSON.parse(json);
       setCookie('config', json, { path: '/' });
+      setOBSConfig(config.obs as OBSConfig);
       setCameraList(config.cams as CameraList);
     };
     reader.readAsText(event.target.files[0]);
@@ -83,9 +84,11 @@ const HomeApp = () => {
           Load Configuration
         </Button>
       </label>
-      {errorLog && (
+      {errorLog.size && (
         <Paper className={classes.error} variant="outlined">
-          <Typography>{errorLog}</Typography>
+          {Array.from(errorLog).map(([tag, msg]) => (
+            <Typography>{msg}</Typography>
+          ))}
         </Paper>
       )}
     </div>

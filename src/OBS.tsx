@@ -1,6 +1,13 @@
 import OBSWebSocket from 'obs-websocket-js';
 import { UseDatum } from 'react-usedatum';
-import { findCamScene, getLastCamSelected, getOBSConfig, logError, setLastCamSelected } from './AppState';
+import {
+  findCamScene,
+  getCameraList,
+  getLastCamSelected,
+  getOBSConfig,
+  logError,
+  setLastCamSelected,
+} from './AppState';
 import { applyCamPreset } from './CamUtil';
 const obs = new OBSWebSocket();
 let obsInitialized = false;
@@ -48,12 +55,23 @@ const connectOBS = () => {
     .connect({ address: `${config.host}:${config.port}`, password: config.password })
     .then(() => {
       console.log(`Success! We're connected & authenticated.`);
-      logError('');
+      logError('OBS', '');
       setOBSConnected(true);
 
       return obs.send('GetSceneList');
     })
     .then((data) => {
+      const errorScenes: string[] = [];
+      for (const cam of getCameraList()) {
+        cam.presets.forEach((preset) => {
+          if (!data.scenes.find((scene) => scene.name === preset.obsScene)) {
+            errorScenes.push(`'${preset.obsScene}'`);
+          }
+        });
+      }
+      if (errorScenes.length) {
+        logError('OBS', `Missing OBS Scene: ${errorScenes.join(',')}`);
+      }
       console.log(`${data.scenes.length} Available Scenes!`);
       console.log(`Current scene: ${data['current-scene']}`);
       const scene = findCamScene(data['current-scene']);
@@ -73,7 +91,7 @@ const connectOBS = () => {
         .catch();
     })
     .catch((err) => {
-      logError(`OBS Connect: ${String(err.error)}`);
+      logError('OBS', `OBS Connect: ${String(err.error)}`);
       setOBSConnected(false);
       // Promise convention dicates you have a catch on every chain.
       // console.log(err.error);

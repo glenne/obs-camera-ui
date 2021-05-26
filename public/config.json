@@ -20,6 +20,16 @@
           "name": "Michael",
           "preset": 2,
           "obsScene": "2 N Michael"
+        },
+        {
+          "name": "2N2 Michael w Text",
+          "preset": 2,
+          "obsScene": "2N2 Michael w Text"
+        },
+        {
+          "name": "Error Scene",
+          "preset": 2,
+          "obsScene": "Error Scene"
         }
       ]
     },

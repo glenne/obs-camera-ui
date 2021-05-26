@@ -34,7 +34,7 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
   const classes = useStyles();
   const [camState] = useCamState();
   const [sending] = useCamSending();
-  const selected = camState[cam.name]?.preset === preset.preset;
+  const selected = camState[cam.name]?.preset.name === preset.name;
   const error = camState[cam.name]?.err;
   const bgclass = selected ? (error ? classes.error : classes.success) : classes.normal;
 

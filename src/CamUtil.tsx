@@ -6,7 +6,7 @@ import { getCamState, logError, setCamSending, setCamState } from './AppState';
 export const applyCamPreset = async (cam: Camera, preset: CameraPreset) => {
   setCamSending(true);
   let err = '';
-  logError('');
+  logError('Camera', '');
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2500);
   try {
@@ -18,13 +18,13 @@ export const applyCamPreset = async (cam: Camera, preset: CameraPreset) => {
     console.log('response was ' + JSON.stringify(response.headers));
   } catch (e) {
     err = e.message;
-    logError(`Updating ${cam.name} cam to preset ${preset.preset} : ${err}`);
+    logError(cam.name, `Updating ${cam.name} cam to preset ${preset.preset} : ${err}`);
   } finally {
     clearTimeout(timeoutId);
     setCamSending(false);
     const camStateNext = getCamState();
     delete camStateNext[cam.name];
-    camStateNext[cam.name] = { err, preset: preset.preset };
+    camStateNext[cam.name] = { err, preset };
     setCamState(camStateNext, true);
   }
 };
