@@ -36,13 +36,24 @@ const connectOBS = () => {
     obs.on('PreviewSceneChanged', (data) => {
       const obsScene = data['scene-name'];
       console.log(`New Preview Scene: ${obsScene}`);
-      const scene = findCamScene(obsScene);
-      if (scene && getLastCamSelected() !== scene.cam.name) {
-        applyCamPreset(scene.cam, scene.scene);
-      }
+      // const scene = findCamScene(obsScene);
+      // if (scene && getLastCamSelected() !== scene.cam.name) {
+      //   applyCamPreset(scene.cam, scene.scene);
+      // }
     });
 
     obs.on('ConnectionClosed', (data) => setOBSConnected(false));
+
+    obs.on('TransitionBegin', (data) => {
+      console.log('transitioning', JSON.stringify(data));
+      const obsScene = data['to-scene'];
+      console.log(`New Active Scene: ${obsScene}`);
+      const scene = findCamScene(obsScene);
+      if (scene) {
+        setLastCamSelected(scene.cam.name);
+        applyCamPreset(scene.cam, scene.scene);
+      }
+    });
 
     // You must add this handler to avoid uncaught exceptions.
     // obs.on('error', (err) => {
@@ -120,4 +131,8 @@ export const applyOBSScene = (obsScene: string) => {
   obs.send('SetPreviewScene', {
     'scene-name': obsScene,
   });
+};
+
+export const doOBSTransition = () => {
+  obs.send('TransitionToProgram', {}).then().catch();
 };

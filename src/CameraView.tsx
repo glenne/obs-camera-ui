@@ -27,6 +27,14 @@ const useStyles = makeStyles((theme) => ({
   nonselectableTitle: {
     color: '#ff0000',
   },
+  selectableDivider: {
+    backgroundColor: '#00ff00',
+    background: '#00ff00',
+    color: '#00ff00',
+  },
+  nonselectableDivider: {
+    backgroundColor: '#ff0000',
+  },
 }));
 export interface CameraProps {
   cam: Camera;

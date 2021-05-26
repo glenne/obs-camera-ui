@@ -9,7 +9,7 @@ import './App.css';
 import { logError, setOBSConfig, useCameraList, useErrorLog } from './AppState';
 import { CameraList, OBSConfig } from './CameraTypes';
 import CameraView from './CameraView';
-import { startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
+import { doOBSTransition, startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
     padding: theme.spacing(1),
     borderColor: 'red',
+  },
+  transition: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -78,19 +81,25 @@ const HomeApp = () => {
           </Grid>
         ))}
       </Grid>
+
+      <Button className={classes.transition} size="small" variant="contained" onClick={doOBSTransition}>
+        Transition
+      </Button>
+      {errorLog.size ? (
+        <Paper className={classes.error} variant="outlined">
+          {Array.from(errorLog).map(([tag, msg]) => (
+            <Typography>{msg}</Typography>
+          ))}
+        </Paper>
+      ) : (
+        <Paper />
+      )}
       <input style={{ display: 'none' }} id="contained-button-file" type="file" onChange={onFileSelected} />
       <label htmlFor="contained-button-file">
         <Button size="small" variant="contained" style={{ background: '#808080' }} component="span">
           Load Configuration
         </Button>
       </label>
-      {errorLog.size && (
-        <Paper className={classes.error} variant="outlined">
-          {Array.from(errorLog).map(([tag, msg]) => (
-            <Typography>{msg}</Typography>
-          ))}
-        </Paper>
-      )}
     </div>
   );
 };
