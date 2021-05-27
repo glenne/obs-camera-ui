@@ -17,9 +17,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     margin: theme.spacing(1),
     borderColor: 'red',
+    backgroundColor: '#300000',
   },
   selectablePaper: {
     borderColor: '#00ff00',
+    backgroundColor: '#003000',
   },
   selectableTitle: {
     color: '#00ff00',
@@ -29,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
   },
   selectableDivider: {
     backgroundColor: '#00ff00',
-    background: '#00ff00',
-    color: '#00ff00',
   },
   nonselectableDivider: {
     backgroundColor: '#ff0000',
@@ -48,7 +48,7 @@ export const CameraView: FC<CameraProps> = ({ cam }) => {
       <Typography className={selectable ? classes.selectableTitle : classes.nonselectableTitle} variant="h5">
         {cam.name}
       </Typography>
-      <Divider />
+      <Divider className={selectable ? classes.selectableDivider : classes.nonselectableDivider} />
       {cam.presets.map((preset) => (
         <CameraPresetButton key={preset.name} cam={cam} preset={preset} />
       ))}
