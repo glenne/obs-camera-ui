@@ -7,6 +7,7 @@ import {
   getOBSConfig,
   logError,
   setLastCamSelected,
+  updateCamState,
 } from './AppState';
 import { applyCamPreset } from './CamUtil';
 const obs = new OBSWebSocket();
@@ -29,30 +30,35 @@ const connectOBS = () => {
       const scene = findCamScene(obsScene);
       if (scene) {
         setLastCamSelected(scene.cam.name);
-        applyCamPreset(scene.cam, scene.scene);
+        // Only change cam on preview changes
       }
     });
 
     obs.on('PreviewSceneChanged', (data) => {
       const obsScene = data['scene-name'];
       console.log(`New Preview Scene: ${obsScene}`);
-      // const scene = findCamScene(obsScene);
-      // if (scene && getLastCamSelected() !== scene.cam.name) {
-      //   applyCamPreset(scene.cam, scene.scene);
-      // }
+      const scene = findCamScene(obsScene);
+      if (!scene) {
+        return;
+      }
+      if (getLastCamSelected() !== scene.cam.name) {
+        applyCamPreset(scene.cam, scene.scene);
+      } else {
+        updateCamState(scene.cam, scene.scene);
+      }
     });
 
     obs.on('ConnectionClosed', (data) => setOBSConnected(false));
 
     obs.on('TransitionBegin', (data) => {
-      console.log('transitioning', JSON.stringify(data));
-      const obsScene = data['to-scene'];
-      console.log(`New Active Scene: ${obsScene}`);
-      const scene = findCamScene(obsScene);
-      if (scene) {
-        setLastCamSelected(scene.cam.name);
-        applyCamPreset(scene.cam, scene.scene);
-      }
+      // console.log('transitioning', JSON.stringify(data));
+      // const obsScene = data['to-scene'];
+      // console.log(`New Active Scene: ${obsScene}`);
+      // const scene = findCamScene(obsScene);
+      // if (scene) {
+      //   setLastCamSelected(scene.cam.name);
+      //   applyCamPreset(scene.cam, scene.scene);
+      // }
     });
 
     // You must add this handler to avoid uncaught exceptions.
@@ -75,6 +81,9 @@ const connectOBS = () => {
       const errorScenes: string[] = [];
       for (const cam of getCameraList()) {
         cam.presets.forEach((preset) => {
+          if (!preset.obsScene) {
+            return;
+          }
           if (!data.scenes.find((scene) => scene.name === preset.obsScene)) {
             errorScenes.push(`'${preset.obsScene}'`);
           }

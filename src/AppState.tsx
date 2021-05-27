@@ -1,5 +1,5 @@
 import { UseDatum } from 'react-usedatum';
-import { CameraList, CameraPreset, OBSConfig } from './CameraTypes';
+import { Camera, CameraList, CameraPreset, OBSConfig } from './CameraTypes';
 
 export const [useErrorLog, setErrorLog, getErrorLog] = UseDatum(new Map<string, string>());
 export const logError = (tag: string, msg: string | undefined) => {
@@ -26,6 +26,14 @@ export const [useCamState, setCamState, getCamState] = UseDatum<{
   [name: string]: { preset: CameraPreset; err: string };
 }>({});
 
+export const updateCamState = (cam: Camera, preset: CameraPreset, err: string = '') => {
+  if (preset.obsScene) {
+    const camStateNext = getCamState();
+    delete camStateNext[cam.name];
+    camStateNext[cam.name] = { err, preset };
+    setCamState(camStateNext, true);
+  }
+};
 export const [useCamSending, setCamSending] = UseDatum(false);
 
 // Utiltiy helpers

@@ -1,7 +1,7 @@
 import { Camera, CameraPreset } from './CameraTypes';
 // @ts-ignore
 import * as DigestFetch from 'digest-fetch';
-import { getCamState, logError, setCamSending, setCamState } from './AppState';
+import { logError, setCamSending, updateCamState } from './AppState';
 
 export const applyCamPreset = async (cam: Camera, preset: CameraPreset) => {
   setCamSending(true);
@@ -22,9 +22,6 @@ export const applyCamPreset = async (cam: Camera, preset: CameraPreset) => {
   } finally {
     clearTimeout(timeoutId);
     setCamSending(false);
-    const camStateNext = getCamState();
-    delete camStateNext[cam.name];
-    camStateNext[cam.name] = { err, preset };
-    setCamState(camStateNext, true);
+    updateCamState(cam, preset, err);
   }
 };

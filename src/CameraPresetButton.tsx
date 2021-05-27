@@ -39,10 +39,10 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
   const bgclass = selected ? (error ? classes.error : classes.success) : classes.normal;
 
   const performButtonClick = () => {
-    applyOBSScene(preset.obsScene);
-    if (!selected) {
-      applyCamPreset(cam, preset);
+    if (preset.obsScene) {
+      applyOBSScene(preset.obsScene);
     }
+    applyCamPreset(cam, preset);
   };
   return (
     <div className={classes.root}>

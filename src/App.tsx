@@ -82,9 +82,11 @@ const HomeApp = () => {
         ))}
       </Grid>
 
-      <Button className={classes.transition} size="small" variant="contained" onClick={doOBSTransition}>
-        Transition
-      </Button>
+      {obsConnected && (
+        <Button className={classes.transition} size="small" variant="contained" onClick={doOBSTransition}>
+          Transition
+        </Button>
+      )}
       {errorLog.size ? (
         <Paper className={classes.error} variant="outlined">
           {Array.from(errorLog).map(([tag, msg]) => (
