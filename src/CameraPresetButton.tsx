@@ -5,7 +5,7 @@ import React, { FC } from 'react';
 import { useCamSending, useCamState } from './AppState';
 import { Camera, CameraPreset } from './CameraTypes';
 import { applyCamPreset } from './CamUtil';
-import { applyOBSScene } from './OBS';
+import { setPreviewScene } from './OBS';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +40,7 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
 
   const performButtonClick = () => {
     if (preset.obsScene) {
-      applyOBSScene(preset.obsScene);
+      setPreviewScene(preset.obsScene);
     }
     applyCamPreset(cam, preset);
   };

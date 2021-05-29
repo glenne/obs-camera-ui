@@ -42,8 +42,10 @@ const connectOBS = () => {
         return;
       }
       if (getLastCamSelected() !== scene.cam.name) {
+        // Apply matching camera selection since the target cam is not active
         applyCamPreset(scene.cam, scene.scene);
       } else {
+        // Take note of the change but don't auto-trigger the camera to update also
         updateCamState(scene.cam, scene.scene);
       }
     });
@@ -133,7 +135,7 @@ export const stopOBSMonitor = () => {
   obs.disconnect();
 };
 
-export const applyOBSScene = (obsScene: string) => {
+export const setPreviewScene = (obsScene: string) => {
   if (!obsScene || !getOBSConnected()) {
     return;
   }
