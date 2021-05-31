@@ -1,8 +1,8 @@
-import { CssBaseline, Paper, Typography } from '@material-ui/core';
+import { CircularProgress, CssBaseline, Paper, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { CookiesProvider } from 'react-cookie';
 import './App.css';
@@ -10,6 +10,7 @@ import { logError, setOBSConfig, useCameraList, useErrorLog } from './AppState';
 import { CameraList, OBSConfig } from './CameraTypes';
 import CameraView from './CameraView';
 import { doOBSTransition, startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
+import useKeypress from 'react-use-keypress';
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -33,15 +34,23 @@ const HomeApp = () => {
   const [cookies, setCookie] = useCookies(['config']);
   const [obsConnected] = useOBSConnected();
   const [errorLog] = useErrorLog();
+  const [transitionProgress, setTransitionProgress] = useState(false);
   const classes = useStyles();
+
+  const initiateOBSTransition = () => {
+    setTransitionProgress(true);
+    doOBSTransition();
+    setTimeout(() => setTransitionProgress(false), 1200);
+  };
+  useKeypress('Enter', initiateOBSTransition);
 
   useEffect(() => {
     const config = cookies.config;
     logError('App', undefined);
     if (config) {
       try {
-        setOBSConfig(config.obs as OBSConfig);
-        setCameraList(config.cams as CameraList);
+        // setOBSConfig(config.obs as OBSConfig);
+        // setCameraList(config.cams as CameraList);
       } catch (e) {
         logError('App', 'Error parsing json: ' + e.message);
       }
@@ -52,6 +61,31 @@ const HomeApp = () => {
     startOBSMonitor();
     return () => stopOBSMonitor();
   }, []);
+
+  useEffect(() => {
+    const getData = () => {
+      console.log('requesting json..');
+      fetch('../camconfig.json', {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          pragma: 'no-cache',
+          'cache-control': 'no-cache',
+        },
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (config) {
+          setOBSConfig(config.obs as OBSConfig);
+          setCameraList(config.cams as CameraList);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    };
+    getData();
+  }, [setCameraList]);
 
   // useEffect(() => {
   //   getData('./config.json');
@@ -76,21 +110,24 @@ const HomeApp = () => {
       {!obsConnected && <Typography color="error">OBS is not connected!</Typography>}
       <Grid container spacing={0}>
         {cameralist.map((cam) => (
-          <Grid item xs={6} key={cam.name}>
+          <Grid key={cam.name} item xs={6}>
             <CameraView cam={cam} />
           </Grid>
         ))}
       </Grid>
 
-      {obsConnected && (
-        <Button className={classes.transition} size="small" variant="contained" onClick={doOBSTransition}>
-          Transition
-        </Button>
-      )}
+      {obsConnected &&
+        (transitionProgress ? (
+          <CircularProgress />
+        ) : (
+          <Button className={classes.transition} size="small" variant="contained" onClick={initiateOBSTransition}>
+            Transition
+          </Button>
+        ))}
       {errorLog.size ? (
         <Paper className={classes.error} variant="outlined">
           {Array.from(errorLog).map(([tag, msg]) => (
-            <Typography>{msg}</Typography>
+            <Typography key={msg}>{msg}</Typography>
           ))}
         </Paper>
       ) : (

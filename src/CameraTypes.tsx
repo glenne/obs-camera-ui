@@ -2,6 +2,7 @@ export interface CameraPreset {
   name: string;
   preset: number;
   obsScene: string;
+  hotkey?: string | string[];
 }
 
 export interface Camera {

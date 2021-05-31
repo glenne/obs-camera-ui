@@ -11,3 +11,8 @@
 
 - [OBS Remote API](https://github.com/Palakis/obs-websocket/blob/4.x-current/docs/generated/protocol.md)
 - [OBS Remote JS](https://github.com/haganbmj/obs-websocket-js)
+
+## Apache Server Setup
+
+- [Enabling MacOS apache](https://discussions.apple.com/docs/DOC-3083)
+- [Enable MacOS apache perms](https://wpbeaches.com/forbidden-403-you-dont-have-permission-to-access-username-on-this-server/)

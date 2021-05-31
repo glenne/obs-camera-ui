@@ -6,6 +6,7 @@ import { useCamSending, useCamState } from './AppState';
 import { Camera, CameraPreset } from './CameraTypes';
 import { applyCamPreset } from './CamUtil';
 import { setPreviewScene } from './OBS';
+import useKeypress from 'react-use-keypress';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,18 +39,26 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
   const error = camState[cam.name]?.err;
   const bgclass = selected ? (error ? classes.error : classes.success) : classes.normal;
 
+  const hotkey = preset.hotkey === undefined ? '' : preset.hotkey;
+  const keylist: string[] = Array.isArray(hotkey) ? hotkey : [hotkey];
+
   const performButtonClick = () => {
     if (preset.obsScene) {
       setPreviewScene(preset.obsScene);
     }
     applyCamPreset(cam, preset);
   };
+
+  useKeypress(keylist, () => {
+    performButtonClick();
+  });
+
   return (
     <div className={classes.root}>
       {sending ? (
         <CircularProgress />
       ) : (
-        <Button size="small" variant="contained" onClick={performButtonClick} className={bgclass}>
+        <Button variant="contained" onClick={performButtonClick} className={bgclass}>
           {preset.name}
         </Button>
       )}

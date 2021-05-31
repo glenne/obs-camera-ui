@@ -69,9 +69,10 @@ const connectOBS = () => {
     // });
   }
 
+  const host = config.host ? config.host : window.location.hostname;
   console.log(`connecting to ${JSON.stringify(config)}`);
   obs
-    .connect({ address: `${config.host}:${config.port}`, password: config.password })
+    .connect({ address: `${host}:${config.port}`, password: config.password })
     .then(() => {
       console.log(`Success! We're connected & authenticated.`);
       logError('OBS', '');

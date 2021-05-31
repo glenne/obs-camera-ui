@@ -1,6 +1,6 @@
 {
   "obs": {
-    "host": "localhost",
+    "host": "",
     "port": 4444,
     "password": "$up3rSecretP@ssw0rd"
   },
@@ -12,24 +12,28 @@
       "password": "CTKLive!",
       "presets": [
         {
-          "name": "Pulpit",
+          "name": "1. Pulpit",
           "preset": 1,
-          "obsScene": "1 N Pulpit"
+          "obsScene": "1 N Pulpit",
+          "hotkey": "1"
         },
         {
-          "name": "Michael 🔠",
+          "name": "2. Michael 🔠",
           "preset": 2,
-          "obsScene": "2 N Michael"
+          "obsScene": "2 N Michael",
+          "hotkey": "2"
         },
         {
           "name": "2N2 Michael 📚",
           "preset": 2,
-          "obsScene": "2N2 Michael w Text"
+          "obsScene": "2N2 Michael w Text",
+          "hotkey": ["n", "o"]
         },
         {
           "name": "Error Scene",
           "preset": 2,
-          "obsScene": "Error Scene"
+          "obsScene": "Error Scene",
+          "hotkey": ""
         }
       ]
     },
@@ -40,19 +44,22 @@
       "password": "CTKLive!",
       "presets": [
         {
-          "name": "Pulpit",
+          "name": "3. Pulpit",
           "preset": 1,
-          "obsScene": "3 S Pulpit"
+          "obsScene": "3 S Pulpit",
+          "hotkey": "3"
         },
         {
-          "name": "Michael",
+          "name": "4. Michael",
           "preset": 2,
-          "obsScene": "4 S Michael"
+          "obsScene": "4 S Michael",
+          "hotkey": "4"
         },
         {
-          "name": "Communion",
+          "name": "5. Communion",
           "preset": 3,
-          "obsScene": "5 S Communion"
+          "obsScene": "5 S Communion",
+          "hotkey": "5"
         }
       ]
     }
