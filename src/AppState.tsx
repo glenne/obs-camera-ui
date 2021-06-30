@@ -22,6 +22,8 @@ export const [useLastCamSelected, setLastCamSelected, getLastCamSelected] = UseD
 export const [useCameraList, setCameraList, getCameraList] = UseDatum<CameraList>([]);
 export const [useOBSConfig, setOBSConfig, getOBSConfig] = UseDatum<OBSConfig | undefined>(undefined);
 
+export const [useOBSPreviewScene, setOBSPreviewScene, getOBSPreviewScene] = UseDatum<string>('');
+
 export const [useCamState, setCamState, getCamState] = UseDatum<{
   [name: string]: { preset: CameraPreset; err: string };
 }>({});

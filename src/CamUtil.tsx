@@ -10,7 +10,7 @@ export const applyCamPreset = async (cam: Camera, preset: CameraPreset) => {
   const timeoutId = setTimeout(() => controller.abort(), 2500);
   try {
     //const url = `http://${cam.ip}/cgi-bin/ptz.cgi?action=start&code=GotoPreset&arg1=0&arg2=5&arg3=0&channel=${preset.preset}`;
-    const host = window.location.hostname;
+    const host = window.location.hostname || '127.0.0.1';
     const url = `http://${host}:8080/?preset=${preset.preset}&cam=${cam.name}`;
     console.log('url=', url);
     new DigestFetch(cam.user, cam.password, { algorithm: 'MD5' });

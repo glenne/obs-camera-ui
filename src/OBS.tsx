@@ -7,6 +7,7 @@ import {
   getOBSConfig,
   logError,
   setLastCamSelected,
+  setOBSPreviewScene,
   updateCamState,
 } from './AppState';
 import { applyCamPreset } from './CamUtil';
@@ -37,6 +38,7 @@ const connectOBS = () => {
     obs.on('PreviewSceneChanged', (data) => {
       const obsScene = data['scene-name'];
       console.log(`New Preview Scene: ${obsScene}`);
+      setOBSPreviewScene(obsScene);
       const scene = findCamScene(obsScene);
       if (!scene) {
         return;
@@ -69,7 +71,7 @@ const connectOBS = () => {
     // });
   }
 
-  const host = config.host ? config.host : window.location.hostname;
+  const host = config.host ? config.host : window.location.hostname || 'localhost';
   console.log(`connecting to ${JSON.stringify(config)}`);
   obs
     .connect({ address: `${host}:${config.port}`, password: config.password })
@@ -107,6 +109,7 @@ const connectOBS = () => {
         .then((data) => {
           console.log(`Current preview scene: ${data.name}`);
           const scene = findCamScene(data.name);
+          setOBSPreviewScene(data.name);
           if (scene && getLastCamSelected() !== scene.cam.name) {
             applyCamPreset(scene.cam, scene.scene);
           }
