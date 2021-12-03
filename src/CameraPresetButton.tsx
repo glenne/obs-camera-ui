@@ -1,11 +1,11 @@
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { useCamSending, useCamState, useOBSPreviewScene } from './AppState';
 import { Camera, CameraPreset } from './CameraTypes';
 import { applyCamPreset } from './CamUtil';
-import { setPreviewScene } from './OBS';
+import { doOBSTransition, setPreviewScene } from './OBS';
 import useKeypress from 'react-use-keypress';
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +42,7 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
   const [camState] = useCamState();
   const [sending] = useCamSending();
   const [camPreviewScene] = useOBSPreviewScene();
+  const clickTimer = useRef<NodeJS.Timeout|undefined>(undefined);
   const selected = camState[cam.name]?.preset.name === preset.name;
   const preview = camPreviewScene && preset.obsScene === camPreviewScene;
   const error = camState[cam.name]?.err;
@@ -54,11 +55,38 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
   const keylist: string[] = Array.isArray(hotkey) ? hotkey : [hotkey];
 
   const performButtonClick = () => {
+    if (clickTimer.current) {
+      clearTimeout(clickTimer.current);
+      clickTimer.current=undefined;
+      onSingleClick();
+      onDoubleClick();
+    } else {
+      clickTimer.current = setTimeout(()=>{
+        clickTimer.current = undefined;
+        onSingleClick();
+      },300);
+    }
+  };
+
+  const onSingleClick = () => {
     if (preset.obsScene) {
       setPreviewScene(preset.obsScene);
     }
     applyCamPreset(cam, preset);
+  }
+  const onDoubleClick = () => {
+    if (preset.obsScene) {
+      doOBSTransition();
+    }
   };
+  
+  useEffect(()=>{
+    return ()=>{if (clickTimer.current) {
+        clearTimeout(clickTimer.current);
+        clickTimer.current=undefined;
+      }
+    }
+  },[]);
 
   useKeypress(keylist, () => {
     performButtonClick();
