@@ -6,6 +6,7 @@ import { useCamSending, useCamState, useCurrentLiveScene, useCurrentPreviewScene
 import { Camera, CameraPreset } from './CameraTypes';
 import { doOBSTransition, setPreviewScene } from './OBS';
 import useKeypress from 'react-use-keypress';
+import { applyCamPreset } from './CamUtil';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,10 +74,12 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
       setPreviewScene(preset.obsScene);
     }
   };
-  
+
   const onDoubleClick = () => {
     if (preset.obsScene) {
       doOBSTransition();
+    } else if (preset.preset >0) {
+      applyCamPreset(cam, preset);
     }
   };
   
@@ -98,7 +101,7 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
         <CircularProgress />
       ) : (
         <Button variant="contained" onClick={performButtonClick} className={bgclass}>
-          {preset.name}
+          {preset.name}{preset.hotkey?`(${preset.hotkey})`:''}
         </Button>
       )}
     </div>

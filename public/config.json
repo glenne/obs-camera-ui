@@ -12,19 +12,19 @@
       "password": "CTKLive!",
       "presets": [
         {
-          "name": "1. Pulpit",
+          "name": "Pulpit",
           "preset": 1,
           "obsScene": "1 N Pulpit",
           "hotkey": "1"
         },
         {
-          "name": "2. Michael 🔠",
+          "name": "Michael 🔠",
           "preset": 2,
           "obsScene": "2 N Michael",
           "hotkey": "2"
         },
         {
-          "name": "2N2 Michael 📚",
+          "name": "Michael 📚",
           "preset": 2,
           "obsScene": "2N2 Michael w Text",
           "hotkey": ["n", "o"]
@@ -44,19 +44,19 @@
       "password": "CTKLive!",
       "presets": [
         {
-          "name": "3. Pulpit",
+          "name": "Pulpit",
           "preset": 1,
           "obsScene": "3 S Pulpit",
           "hotkey": "3"
         },
         {
-          "name": "4. Michael",
+          "name": "Michael",
           "preset": 2,
           "obsScene": "4 S Michael",
           "hotkey": "4"
         },
         {
-          "name": "5. Communion",
+          "name": "Communion",
           "preset": 3,
           "obsScene": "5 S Communion",
           "hotkey": "5"
