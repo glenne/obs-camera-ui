@@ -13,6 +13,11 @@ export interface Camera {
   presets: CameraPreset[];
 }
 
+export interface CameraScene {
+  cam: Camera;
+  scene: CameraPreset;
+}
+
 export interface OBSConfig {
   host: string;
   port: number;
@@ -20,3 +25,8 @@ export interface OBSConfig {
 }
 
 export type CameraList = Camera[];
+
+export interface Configuration {
+  obs: OBSConfig;
+  cams: CameraList;
+}

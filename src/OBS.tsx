@@ -1,13 +1,15 @@
 import OBSWebSocket from 'obs-websocket-js';
 import { UseDatum } from 'react-usedatum';
 import {
+  DefaultCamScene,
   findCamScene,
   getCameraList,
   getLastCamSelected,
   getOBSConfig,
   logError,
+  setCurrentLiveScene,
+  setCurrentPreviewScene,
   setLastCamSelected,
-  setOBSPreviewScene,
   updateCamState,
 } from './AppState';
 import { applyCamPreset } from './CamUtil';
@@ -38,10 +40,12 @@ const connectOBS = () => {
     obs.on('PreviewSceneChanged', (data) => {
       const obsScene = data['scene-name'];
       console.log(`New Preview Scene: ${obsScene}`);
-      setOBSPreviewScene(obsScene);
       const scene = findCamScene(obsScene);
       if (!scene) {
+        setCurrentPreviewScene(DefaultCamScene);
         return;
+      } else {
+        setCurrentPreviewScene(scene);
       }
       if (getLastCamSelected() !== scene.cam.name) {
         // Apply matching camera selection since the target cam is not active
@@ -55,14 +59,18 @@ const connectOBS = () => {
     obs.on('ConnectionClosed', (data) => setOBSConnected(false));
 
     obs.on('TransitionBegin', (data) => {
-      // console.log('transitioning', JSON.stringify(data));
-      // const obsScene = data['to-scene'];
-      // console.log(`New Active Scene: ${obsScene}`);
-      // const scene = findCamScene(obsScene);
-      // if (scene) {
-      //   setLastCamSelected(scene.cam.name);
-      //   applyCamPreset(scene.cam, scene.scene);
-      // }
+      //console.log('transitioning', JSON.stringify(data));
+      const obsScene = data['to-scene'];
+      console.log(`Transition Scene: ${obsScene} from ${data['from-scene']}`);
+      let scene = findCamScene(obsScene) || DefaultCamScene;
+      setCurrentLiveScene(scene);
+      if (scene.scene.preset>0) {
+          applyCamPreset(scene.cam, scene.scene);
+      }
+        
+      scene = findCamScene(data['from-scene']) || DefaultCamScene;
+      setCurrentPreviewScene(scene);
+
     });
 
     // You must add this handler to avoid uncaught exceptions.
@@ -100,6 +108,7 @@ const connectOBS = () => {
       console.log(`${data.scenes.length} Available Scenes!`);
       console.log(`Current scene: ${data['current-scene']}`);
       const scene = findCamScene(data['current-scene']);
+      setCurrentLiveScene(scene||DefaultCamScene);
       if (scene) {
         setLastCamSelected(scene.cam.name);
         applyCamPreset(scene.cam, scene.scene);
@@ -109,7 +118,7 @@ const connectOBS = () => {
         .then((data) => {
           console.log(`Current preview scene: ${data.name}`);
           const scene = findCamScene(data.name);
-          setOBSPreviewScene(data.name);
+          setCurrentPreviewScene(scene || DefaultCamScene);
           if (scene && getLastCamSelected() !== scene.cam.name) {
             applyCamPreset(scene.cam, scene.scene);
           }

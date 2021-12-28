@@ -1,6 +1,15 @@
 import { UseDatum } from 'react-usedatum';
-import { Camera, CameraList, CameraPreset, OBSConfig } from './CameraTypes';
+import { Camera, CameraList, CameraPreset, CameraScene, OBSConfig } from './CameraTypes';
 
+export const DefaultCamScene : CameraScene = { 
+  cam: {name: '',
+    ip:'',
+    user: '',
+    password: '',
+    presets: []}, 
+  scene: {name:'', preset:0, obsScene:''}};
+export const [useCurrentLiveScene, setCurrentLiveScene, getCurrentLiveScene] = UseDatum<CameraScene>(DefaultCamScene);
+export const [useCurrentPreviewScene, setCurrentPreviewScene, getCurrentPreviewScene] = UseDatum<CameraScene>(DefaultCamScene);
 export const [useErrorLog, setErrorLog, getErrorLog] = UseDatum(new Map<string, string>());
 export const logError = (tag: string, msg: string | undefined) => {
   console.log(`${tag}: ${msg}`);
@@ -22,8 +31,6 @@ export const [useLastCamSelected, setLastCamSelected, getLastCamSelected] = UseD
 export const [useCameraList, setCameraList, getCameraList] = UseDatum<CameraList>([]);
 export const [useOBSConfig, setOBSConfig, getOBSConfig] = UseDatum<OBSConfig | undefined>(undefined);
 
-export const [useOBSPreviewScene, setOBSPreviewScene, getOBSPreviewScene] = UseDatum<string>('');
-
 export const [useCamState, setCamState, getCamState] = UseDatum<{
   [name: string]: { preset: CameraPreset; err: string };
 }>({});
@@ -39,7 +46,7 @@ export const updateCamState = (cam: Camera, preset: CameraPreset, err: string = 
 export const [useCamSending, setCamSending] = UseDatum(false);
 
 // Utiltiy helpers
-export const findCamScene = (obsScene: string) => {
+export const findCamScene = (obsScene: string) : undefined|CameraScene => {
   for (const cam of getCameraList()) {
     const scene = cam.presets.find((preset) => preset.obsScene === obsScene);
     if (scene) {

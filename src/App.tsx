@@ -7,7 +7,7 @@ import { useCookies } from 'react-cookie';
 import { CookiesProvider } from 'react-cookie';
 import './App.css';
 import { logError, setOBSConfig, useCameraList, useErrorLog } from './AppState';
-import { CameraList, OBSConfig } from './CameraTypes';
+import { CameraList, CameraPreset, Configuration, OBSConfig } from './CameraTypes';
 import CameraView from './CameraView';
 import { doOBSTransition, startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
 import useKeypress from 'react-use-keypress';
@@ -98,10 +98,29 @@ const HomeApp = () => {
     const reader = new FileReader();
     reader.onload = (event: any) => {
       const json = event.target.result;
-      const config = JSON.parse(json);
+      const config = JSON.parse(json) as Configuration;
+      if (Array.isArray(config.cams)) {
+        config.cams.forEach((camConfig)=>{
+          if (Array.isArray(camConfig.presets)) {
+            camConfig.presets.forEach((camPreset:CameraPreset)=>{
+              // Insure all fields are defined
+              camPreset.name = camPreset.name || 'Undefined';
+              camPreset.preset = camPreset.preset || 0;
+              camPreset.obsScene = camPreset.obsScene || '';
+              camPreset.hotkey = camPreset.hotkey || '';
+              
+            });
+          } else {
+            logError('File read',"Missing config.cams.presets");
+          }
+      });
       setCookie('config', json, { path: '/' });
       setOBSConfig(config.obs as OBSConfig);
       setCameraList(config.cams as CameraList);
+      } else {
+        logError('File read',"Missing config.cams");
+      }
+      
     };
     reader.readAsText(event.target.files[0]);
   };

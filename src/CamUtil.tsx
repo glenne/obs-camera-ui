@@ -2,7 +2,10 @@ import { Camera, CameraPreset } from './CameraTypes';
 import * as DigestFetch from 'digest-fetch';
 import { logError, setCamSending, updateCamState } from './AppState';
 
-export const applyCamPreset = async (cam: Camera, preset: CameraPreset) => {
+export const applyCamPreset = async (cam: Camera|undefined, preset: CameraPreset) => {
+  if (!cam) {
+    return;
+  }
   setCamSending(true);
   let err = '';
   logError('Camera', '');
