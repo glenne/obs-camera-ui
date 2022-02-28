@@ -1,8 +1,7 @@
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { FC, useEffect, useRef } from 'react';
-import { useCamSending, useCamState, useCurrentLiveScene, useCurrentPreviewScene } from './AppState';
+import { useCamState, useCurrentLiveScene, useCurrentPreviewScene, useLastCamSelected } from './AppState';
 import { Camera, CameraPreset } from './CameraTypes';
 import { doOBSTransition, setPreviewScene } from './OBS';
 import useKeypress from 'react-use-keypress';
@@ -13,7 +12,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(),
     height: 24 + theme.spacing() * 2,
   },
-  normal: {},
+  normal: {
+  },
   error: {
     background: '#d32f2f',
     '&:hover': {
@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
       background: '#388e3c',
     },
   },
+  dim: {
+    background: '#808080'
+  },
   preview: {
     background: '#d0d000',
     '&:hover': {
@@ -36,26 +39,33 @@ const useStyles = makeStyles((theme) => ({
 export interface CameraPresetProps {
   cam: Camera;
   preset: CameraPreset;
+  dim?:boolean;
 }
-export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
+export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset, dim }) => {
   const classes = useStyles();
   const [camState] = useCamState();
-  const [sending] = useCamSending();
   const [currentPreviewScene] = useCurrentPreviewScene();
   const [currentLiveScene] = useCurrentLiveScene();
   const clickTimer = useRef<NodeJS.Timeout|undefined>(undefined);
+  const [lastCamSelected] = useLastCamSelected();
+  const camIsLive = cam.name === lastCamSelected;
   const selected = preset.obsScene === currentLiveScene.scene.obsScene && preset.preset === currentLiveScene.scene.preset;// camState[cam.name]?.preset.name === preset.name;
   const preview = preset.obsScene === currentPreviewScene.scene.obsScene && preset.preset === currentPreviewScene.scene.preset;
   const error = camState[cam.name]?.err;
-  const bgclass = preview ? classes.preview : selected ? (error ? classes.error : classes.success) : classes.normal;
-
+  const bgclass = preview ? classes.preview : selected ? (error ? classes.error : classes.success) : dim ?  classes.dim :classes.normal;
+  const activeCamPreset = camIsLive? currentLiveScene.scene.preset===preset.preset:
+                                      camState[cam.name]?.preset.preset === preset.preset;
   // console.log(
   //   JSON.stringify({ preview, bgclass, camPreviewScene, name: cam.name, obsScene: camState[cam.name]?.preset.obsScene })
   // );
   const hotkey = preset.hotkey === undefined ? '' : preset.hotkey;
   const keylist: string[] = Array.isArray(hotkey) ? hotkey : [hotkey];
 
-  const performButtonClick = () => {
+  const performButtonClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const rightClick= e?.type === 'contextmenu';
+    if (rightClick) {
+
+    }
     if (clickTimer.current) {
       clearTimeout(clickTimer.current);
       clickTimer.current=undefined;
@@ -92,18 +102,14 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset }) => {
   },[]);
 
   useKeypress(keylist, () => {
-    performButtonClick();
+    onSingleClick();
   });
 
   return (
     <div className={classes.root}>
-      {sending ? (
-        <CircularProgress />
-      ) : (
-        <Button variant="contained" onClick={performButtonClick} className={bgclass}>
-          {preset.name}{preset.hotkey?`(${preset.hotkey})`:''}
+      <Button variant="contained" onClick={performButtonClick} className={bgclass} >
+          {preset.name}{preset.hotkey?`(${preset.hotkey})`:''}{activeCamPreset && ' <='}
         </Button>
-      )}
     </div>
   );
 };

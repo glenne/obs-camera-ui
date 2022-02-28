@@ -44,13 +44,13 @@ export const CameraView: FC<CameraProps> = ({ cam }) => {
   const [lastCamSelected] = useLastCamSelected();
   const selectable = cam.name !== lastCamSelected;
   return (
-    <Paper variant="outlined" className={clsx(classes.paper, selectable && classes.selectablePaper)}>
+    <Paper variant="outlined" className={clsx(classes.paper, selectable && classes.selectablePaper)} >
       <Typography className={selectable ? classes.selectableTitle : classes.nonselectableTitle} variant="h5">
         {cam.name}
       </Typography>
       <Divider className={selectable ? classes.selectableDivider : classes.nonselectableDivider} />
       {cam.presets.map((preset) => (
-        <CameraPresetButton key={preset.name} cam={cam} preset={preset} />
+        <CameraPresetButton key={preset.name} cam={cam} preset={preset} dim={!selectable}/>
       ))}
     </Paper>
   );

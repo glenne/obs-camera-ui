@@ -1,16 +1,16 @@
-import { CircularProgress, CssBaseline, Paper, Typography } from '@material-ui/core';
+import { CssBaseline, Paper, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import { useCookies } from 'react-cookie';
 import { CookiesProvider } from 'react-cookie';
 import './App.css';
 import { logError, setOBSConfig, useCameraList, useErrorLog } from './AppState';
 import { CameraList, CameraPreset, Configuration, OBSConfig } from './CameraTypes';
 import CameraView from './CameraView';
-import { doOBSTransition, startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
-import useKeypress from 'react-use-keypress';
+import { startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
+import TransitionButton from './TransitionButton';
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
   transition: {
     margin: theme.spacing(1),
+    alignSelf: 'start'
   },
 }));
 
@@ -34,15 +35,7 @@ const HomeApp = () => {
   const [cookies, setCookie] = useCookies(['config']);
   const [obsConnected] = useOBSConnected();
   const [errorLog] = useErrorLog();
-  const [transitionProgress, setTransitionProgress] = useState(false);
   const classes = useStyles();
-
-  const initiateOBSTransition = () => {
-    setTransitionProgress(true);
-    doOBSTransition();
-    setTimeout(() => setTransitionProgress(false), 1200);
-  };
-  useKeypress('Enter', initiateOBSTransition);
 
   useEffect(() => {
     const config = cookies.config;
@@ -125,24 +118,19 @@ const HomeApp = () => {
     reader.readAsText(event.target.files[0]);
   };
   return (
-    <div className="App">
+    <div className="App" style = { {
+      transform: `scale(0.9)` ,transformOrigin: 'top center'
+  }}>
       {!obsConnected && <Typography color="error">OBS is not connected!</Typography>}
       <Grid container spacing={0}>
         {cameralist.map((cam) => (
-          <Grid key={cam.name} item xs={6}>
+          <Grid key={cam.name} item >
             <CameraView cam={cam} />
           </Grid>
         ))}
       </Grid>
-
-      {obsConnected &&
-        (transitionProgress ? (
-          <CircularProgress />
-        ) : (
-          <Button className={classes.transition} size="small" variant="contained" onClick={initiateOBSTransition}>
-            Transition
-          </Button>
-        ))}
+      <TransitionButton/>
+      
       {errorLog.size ? (
         <Paper className={classes.error} variant="outlined">
           {Array.from(errorLog).map(([tag, msg]) => (

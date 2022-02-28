@@ -3,7 +3,7 @@ import * as DigestFetch from 'digest-fetch';
 import { logError, setCamSending, updateCamState } from './AppState';
 
 export const applyCamPreset = async (cam: Camera|undefined, preset: CameraPreset) => {
-  if (!cam) {
+  if (!cam || !preset || !preset.preset) {
     return;
   }
   setCamSending(true);
