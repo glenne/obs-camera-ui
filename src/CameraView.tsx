@@ -9,9 +9,9 @@ import clsx from 'clsx';
 import CameraMoveButton from './CameraMoveButton';
 
 const liveColor='#00ff00';
-const liveDimColor='#003000';
+const liveBgColor='#003000';
 const idleColor='#ff0000';
-const idleDimColor='#300000';
+const idleBgColor='#300000';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,24 +22,24 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
     margin: theme.spacing(1),
-    borderColor: 'red',
-    backgroundColor: '#300000',
+    borderColor: liveColor,
+    backgroundColor: liveBgColor,
   },
   selectablePaper: {
-    borderColor: '#00ff00',
-    backgroundColor: '#003000',
+    borderColor: idleColor,
+    backgroundColor: idleBgColor,
   },
   selectableTitle: {
-    color: '#00ff00',
+    color: idleColor,
   },
   nonselectableTitle: {
-    color: '#ff0000',
+    color: liveColor,
   },
   selectableDivider: {
-    backgroundColor: '#00ff00',
+    backgroundColor: idleColor,
   },
   nonselectableDivider: {
-    backgroundColor: '#ff0000',
+    backgroundColor: liveColor,
   },
 }));
 export interface CameraProps {
