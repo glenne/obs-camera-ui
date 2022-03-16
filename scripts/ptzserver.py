@@ -33,7 +33,10 @@ DefaultCam = 'South'
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         args = parse_qs(urlparse(self.path).query)
-        preset = args.get("preset", None)
+        preset = args.get("preset", ["1"])[0]
+        action = args.get("action", ["start"])[0]
+        code = args.get("code", ["GotoPreset"])[0]
+        arg2 = args.get("arg2", [preset])[0]
         if preset == None:
             self.send_response(400)
             self.send_header("Content-type", "text/html")
@@ -64,7 +67,6 @@ class MyServer(BaseHTTPRequestHandler):
 
 
         try:
-            preset = preset[0]
             cam = cam[0]
             host = "http://"+camip[0]
             camuser = camuser[0]
@@ -83,9 +85,9 @@ class MyServer(BaseHTTPRequestHandler):
             if session == None:
                 host_sessions[cam] = session = requests.Session()
 
-            url = host+'/cgi-bin/ptz.cgi?action=start&channel=1&code=GotoPreset&arg1=0&arg2=' + \
-                str(preset) + '&arg3=0'
-            # print("url=",url)
+            url = host+'/cgi-bin/ptz.cgi?action='+action+'&channel=1&code='+code+'&arg1=0&arg2=' + \
+                str(arg2) + '&arg3=0'
+            print("url=",url)
             print("host=",host," preset=",preset)
             resp = session.get(url,
                                auth=HTTPDigestAuth(camuser, campw),

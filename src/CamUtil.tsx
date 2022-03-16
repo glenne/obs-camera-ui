@@ -1,9 +1,14 @@
 import { Camera, CameraPreset } from './CameraTypes';
 import * as DigestFetch from 'digest-fetch';
-import { logError, setCamSending, updateCamState } from './AppState';
+import { getCamState, logError, setCamSending, updateCamState } from './AppState';
 
-export const applyCamPreset = async (cam: Camera|undefined, preset: CameraPreset) => {
+export const applyCamPreset = async (cam: Camera | undefined, preset: CameraPreset) => {
   if (!cam || !preset || !preset.preset) {
+    return;
+  }
+  // console.log(JSON.stringify({from: getCamState()[cam.name]?.preset?.preset, to: preset.preset}))
+  if (getCamState()[cam.name]?.preset?.preset === preset.preset) {
+    // Already there
     return;
   }
   setCamSending(true);
