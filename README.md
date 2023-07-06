@@ -12,13 +12,18 @@
 2. Configure the websocket plugin via OBS/Tools/Websocket Server Settings
 3. Match OBS server settings to the config.json file
 
-## Building
+## Build Tools
 
 1. Install Visual Studio Code to edit
 2. Install [nvm](https://github.com/nvm-sh/nvm) to manage npm install
 3. Install npm with nvm: `nvm install --lts`
-4. Install yarn: `npm install --global yarn && yarn`
-4. Make installer in build directory: `yarn build`ß
+4. Install yarn: `npm install --global yarn`
+
+## Build and Install
+
+1. Update node_modules: `yarn install`
+2. Make installer in build directory: `yarn build`
+3. Install to ~/Sites/obs-amcrest: `yarn deploy`
 
 ## Apache Server Setup
 
@@ -29,13 +34,13 @@ For the contents of the /etc/apache2/users/glenne.conf file, use the following:
 ```
 <Directory "/Users/glenne/Sites/">
   AddLanguage en .en
-  AddHandler perl-script .pl
-  PerlHandler ModPerl::Registry
   Options Indexes MultiViews FollowSymLinks ExecCGI
   AllowOverride All
   Require all granted
 </Directory>
 ```
+
+Be sure to edit /private/etc/apache2/extra/httpd-userdir.conf and enable the *.conf include.
 
 The following was needed on one machine:
 
