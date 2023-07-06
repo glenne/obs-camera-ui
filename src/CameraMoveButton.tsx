@@ -7,16 +7,16 @@ import { logError } from './AppState';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop:0,
-    marginBottom:0,
-    marginLeft:4,
-    marginRight:4,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 4,
+    marginRight: 4,
     height: 24 + theme.spacing(),
   },
   normal: {
   },
   button: {
-    padding:0,
+    padding: 0,
     textTransform: 'none'
   },
   error: {
@@ -52,11 +52,11 @@ export const sendMoveCommand = async (cam: Camera, action: string, direction: st
   try {
     //const url = `http://${cam.ip}/cgi-bin/ptz.cgi?action=start&code=GotoPreset&arg1=0&arg2=5&arg3=0&channel=${preset.preset}`;
     const host = window.location.hostname || '127.0.0.1';
-    const url = `http://${host}:8080/?action=${action}&code=${direction}&cam=${cam.name}&camip=${cam.ip}&camuser=${cam.user}&campw=${cam.password}`;
+    const url = `http://${host}:8080/?action=${action}&code=${direction}&cam=${cam.name}&camip=${cam.ip}&camuser=${cam.user}&campw=${cam.password}&camvendor=${cam.vendor}`;
     // console.log('url=', url);
     new DigestFetch(cam.user, cam.password, { algorithm: 'MD5' });
     const response = await fetch(url, { signal: controller.signal, mode: 'no-cors' });
-    console.log('response was ' + JSON.stringify(response.headers));
+    // console.log('response was ' + JSON.stringify(response.headers));
   } catch (e) {
     err = e.message;
     logError(cam.name, `Updating ${cam.name} cam to ${action} ${direction} : ${err}`);
@@ -70,7 +70,7 @@ export interface CameraPresetProps {
   dim?: boolean;
 }
 
-const Symbols = { 'Left': '<', 'Right': '>', 'Up': '^', 'Down': 'v', ZoomWide:'-', ZoomTele:'+' };
+const Symbols = { 'Left': '<', 'Right': '>', 'Up': '^', 'Down': 'v', ZoomWide: '-', ZoomTele: '+' };
 
 export const CameraMoveButton: FC<CameraPresetProps> = ({ cam, direction, dim }) => {
   const classes = useStyles();

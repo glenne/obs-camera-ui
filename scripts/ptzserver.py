@@ -36,6 +36,7 @@ class MyServer(BaseHTTPRequestHandler):
         preset = args.get("preset", ["1"])[0]
         action = args.get("action", ["start"])[0]
         code = args.get("code", ["GotoPreset"])[0]
+        camvendor=args.get("camvendor",['amcrest'])[0]
         arg2 = args.get("arg2", [preset])[0]
         if preset == None:
             self.send_response(400)
@@ -65,7 +66,6 @@ class MyServer(BaseHTTPRequestHandler):
             print("campw argument missing")
             return
 
-
         try:
             cam = cam[0]
             host = "http://"+camip[0]
@@ -85,14 +85,39 @@ class MyServer(BaseHTTPRequestHandler):
             if session == None:
                 host_sessions[cam] = session = requests.Session()
 
-            url = host+'/cgi-bin/ptz.cgi?action='+action+'&channel=1&code='+code+'&arg1=0&arg2=' + \
-                str(arg2) + '&arg3=0'
-            print("url=",url)
-            print("host=",host," preset=",preset)
+            # print("action=",action," code=",code)
+            if camvendor.lower() == "ptzoptics":
+                code=code.lower()
+                
+                if action == 'start':
+                    if code == 'gotopreset':
+                        url = host + '/cgi-bin/ptzctrl.cgi?ptzcmd&poscall&' + str(preset[0])
+                    # 'Left' | 'Right' | 'Up' | 'Down' | 'ZoomWide' | 'ZoomTele'
+                    elif code == 'zoomwide':
+                        url = host + '/cgi-bin/ptzctrl.cgi?ptzcmd&zoomout'
+                    elif code == 'zoomtele':
+                        url = host + '/cgi-bin/ptzctrl.cgi?ptzcmd&zoomin'
+                    else:
+                        url = host + '/cgi-bin/ptzctrl.cgi?ptzcmd&' + code
+                elif action == 'stop':
+                    if code == 'zoomwide' or code == 'zoomtele':
+                        url = host + '/cgi-bin/ptzctrl.cgi?ptzcmd&zoomstop'
+                    else:
+                        url = host + '/cgi-bin/ptzctrl.cgi?ptzcmd&ptzstop'
+                else:
+                    url = None
+            
+            else:
+                # amcrest
+                url = host+'/cgi-bin/ptz.cgi?action='+action+'&channel=1&code='+code+'&arg1=0&arg2=' + \
+                    str(arg2) + '&arg3=0'
+            # print("url=",url)
+            # print("host=",host," preset=",preset)
             resp = session.get(url,
                                auth=HTTPDigestAuth(camuser, campw),
                                timeout=2.000)
             self.send_response(200)
+            
             if (resp.status_code != 200):
                 print(resp)
                 

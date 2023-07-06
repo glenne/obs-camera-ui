@@ -1,65 +1,49 @@
 {
   "obs": {
-    "host": "",
-    "port": 4444,
+    "host": "localhost",
+    "port": 4455,
     "password": "$up3rSecretP@ssw0rd"
   },
   "cams": [
     {
       "name": "North",
-      "ip": "172.20.1.32",
+      "ip": "10.0.1.252",
       "user": "admin",
-      "password": "CTKLive!",
+      "password": "admin",
+      "vendor": "ptzoptics",
       "presets": [
         {
-          "name": "Pulpit",
+          "name": "Scene1",
           "preset": 1,
-          "obsScene": "1 N Pulpit",
+          "obsScene": "Scene1",
           "hotkey": "1"
         },
         {
-          "name": "Michael 🔠",
+          "name": "Scene2",
           "preset": 2,
-          "obsScene": "2 N Michael",
+          "obsScene": "Scene2",
           "hotkey": "2"
-        },
-        {
-          "name": "Michael 📚",
-          "preset": 2,
-          "obsScene": "2N2 Michael w Text",
-          "hotkey": ["n", "o"]
-        },
-        {
-          "name": "Error Scene",
-          "preset": 2,
-          "obsScene": "Error Scene",
-          "hotkey": ""
         }
       ]
     },
     {
       "name": "South",
-      "ip": "172.20.1.31",
+      "ip": "10.0.1.252",
       "user": "admin",
-      "password": "CTKLive!",
+      "password": "admin",
+      "vendor": "ptzoptics",
       "presets": [
         {
-          "name": "Pulpit",
+          "name": "Scene3",
           "preset": 1,
-          "obsScene": "3 S Pulpit",
-          "hotkey": "3"
+          "obsScene": "Scene3",
+          "hotkey": "1"
         },
         {
-          "name": "Michael",
+          "name": "Scene4",
           "preset": 2,
-          "obsScene": "4 S Michael",
-          "hotkey": "4"
-        },
-        {
-          "name": "Communion",
-          "preset": 3,
-          "obsScene": "5 S Communion",
-          "hotkey": "5"
+          "obsScene": "Scene4",
+          "hotkey": "2"
         }
       ]
     }

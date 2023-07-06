@@ -11,6 +11,7 @@ export interface Camera {
   user: string;
   password: string;
   presets: CameraPreset[];
+  vendor: string;
 }
 
 export interface CameraScene {
