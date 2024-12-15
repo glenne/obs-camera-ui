@@ -22,7 +22,7 @@ export const applyCamPreset = async (cam: Camera | undefined, preset: CameraPres
     const url = `http://${host}:8080/?preset=${preset.preset}&cam=${cam.name}&camip=${cam.ip}&camuser=${cam.user}&campw=${cam.password}&camvendor=${cam.vendor}`;
     // console.log('url=', url);
     new DigestFetch(cam.user, cam.password, { algorithm: 'MD5' });
-    const response = await fetch(url, { signal: controller.signal, mode: 'no-cors' });
+    await fetch(url, { signal: controller.signal, mode: 'no-cors' });
     // console.log('response was ' + JSON.stringify(response.headers));
   } catch (e) {
     err = e.message;

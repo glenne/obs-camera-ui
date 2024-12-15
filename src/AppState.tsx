@@ -58,6 +58,8 @@ export const findCamScene = (obsScene: string): undefined | CameraScene => {
     }
   }
 
-  logError('OBS', `Scene not found: ${obsScene}`);
+  if (obsScene !== "Fade") {
+    logError('OBS', `Scene not found: ${obsScene}`);
+  }
   return undefined;
 };

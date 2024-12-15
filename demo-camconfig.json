@@ -1,0 +1,175 @@
+{
+    "obs": {
+      "host": "",
+      "port": 4455,
+      "password": "$up3rD00p3rS3ret"
+    },
+    "cams": [
+      {
+        "name": "Misc",
+        "ip": "",
+        "user": "obs",
+        "password": "CTKLive!",
+        "presets": [
+          {
+            "name": "Wide View",
+            "obsScene": "WideView"
+          },
+          {
+            "name": "Intro",
+            "obsScene": "/ Intro Music"
+          },
+          {
+            "name": "PC Screen",
+            "obsScene": "Just Slides"
+          },
+          {
+            "name": "Computer Fill",
+            "obsScene": "Computer"
+          },
+          {
+            "name": "Multi Cam",
+            "obsScene": "MultiCam"
+          }
+        ]
+      },
+      {
+        "name": "North",
+        "ip": "172.20.1.34",
+        "user": "obs",
+        "password": "CTKLive!",
+        "vendor": "ptzoptics",
+        "presets": [
+          {
+            "name": "Band",
+            "preset": 3,
+            "obsScene": "3N Keyboard No Text"
+          },
+          {
+            "name": "Band 🔠",
+            "preset": 3,
+            "obsScene": "4N Keyboard w Text"
+          },
+          {
+            "name": "Center",
+            "preset": 1,
+            "obsScene": "9N Center No Text"
+          },
+          {
+            "name": "Center 🔠",
+            "preset": 1,
+            "obsScene": "*N Center w Text"
+          },
+          {
+            "name": "Pulpit",
+            "preset": 2,
+            "obsScene": "N Pulpit No Text"
+          },
+          {
+            "name": "Communion 🔠",
+            "preset": 4,
+            "obsScene": "0N Communion w Text"
+          },
+          {
+            "name": "Sanctuary",
+            "preset": 5,
+            "obsScene": "NorthView No Text"
+          },
+          {
+            "name": "Sanctuary 🔠",
+            "preset": 5,
+            "obsScene": "NorthView w Text"
+          },
+          {
+            "name": "Choir",
+            "preset": 6,
+            "obsScene": "N Choir no Text"
+          },
+          {
+            "name": "Custom 7",
+            "preset": 7,
+            "obsScene": "N Custom 7"
+          },
+          {
+            "name": "Custom 8",
+            "preset": 8,
+            "obsScene": "N Custom 8"
+          },
+          {
+            "name": "Pastor Exit",
+            "preset": 9,
+            "obsScene": "N Pastor Exit"
+          }
+        ]
+      },
+      {
+        "name": "South",
+        "ip": "172.20.1.35",
+        "user": "obs",
+        "password": "CTKLive!",
+        "vendor": "ptzoptics",
+        "presets": [
+          {
+            "name": "Band 🔠",
+            "preset": 3,
+            "obsScene": "S Band w Text"
+          },
+          {
+            "name": "Center",
+            "preset": 1,
+            "obsScene": "1S Center No Text"
+          },
+          {
+            "name": "Center 🔠",
+            "preset": 1,
+            "obsScene": "2S Center w Text"
+          },
+          {
+            "name": "Pulpit",
+            "preset": 2,
+            "obsScene": "5S Pulpit No Text"
+          },
+          {
+            "name": "Pulpit 🔠",
+            "preset": 2,
+            "obsScene": "6S Pulpit w Text"
+          },
+          {
+            "name": "Communion",
+            "preset": 4,
+            "obsScene": "7S Communion No Text"
+          },
+          {
+            "name": "Communion 🔠",
+            "preset": 4,
+            "obsScene": "8S Communion w Text"
+          },
+          {
+            "name": "Sanctuary",
+            "preset": 5,
+            "obsScene": "S Sanctuary No Text"
+          },
+          {
+            "name": "Sanctuary 🔠",
+            "preset": 5,
+            "obsScene": "S Sanctuary w Text"
+          },
+          {
+            "name": "Choir",
+            "preset": 6,
+            "obsScene": "S Choir no Text"
+          },
+          {
+            "name": "Custom 7",
+            "preset": 7,
+            "obsScene": "S Custom 7"
+          },
+          {
+            "name": "Custom 8",
+            "preset": 8,
+            "obsScene": "S Custom 8"
+          }
+        ]
+      }
+    ]
+  }

@@ -33,6 +33,7 @@ const connectOBS = () => {
       const scene = findCamScene(obsScene);
       if (scene) {
         setLastCamSelected(scene.cam.name);
+        setCurrentLiveScene(scene);
         // Only change cam on preview changes
       }
     });
@@ -59,7 +60,7 @@ const connectOBS = () => {
     obs.on('ConnectionClosed', (data) => setOBSConnected(false));
 
     obs.on('SceneTransitionStarted', (data) => {
-      //console.log('transitioning', JSON.stringify(data));
+      // console.log('transitioning', JSON.stringify(data));
       const obsScene = data.transitionName;
       let scene = findCamScene(obsScene) || DefaultCamScene;
       setCurrentLiveScene(scene);

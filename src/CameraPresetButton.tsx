@@ -39,43 +39,46 @@ const useStyles = makeStyles((theme) => ({
 export interface CameraPresetProps {
   cam: Camera;
   preset: CameraPreset;
-  dim?:boolean;
+  dim?: boolean;
 }
 export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset, dim }) => {
   const classes = useStyles();
   const [camState] = useCamState();
   const [currentPreviewScene] = useCurrentPreviewScene();
   const [currentLiveScene] = useCurrentLiveScene();
-  const clickTimer = useRef<NodeJS.Timeout|undefined>(undefined);
+  const clickTimer = useRef<NodeJS.Timeout | undefined>(undefined);
   const [lastCamSelected] = useLastCamSelected();
   const camIsLive = cam.name === lastCamSelected;
   const selected = preset.obsScene === currentLiveScene.scene.obsScene && preset.preset === currentLiveScene.scene.preset;// camState[cam.name]?.preset.name === preset.name;
   const preview = preset.obsScene === currentPreviewScene.scene.obsScene && preset.preset === currentPreviewScene.scene.preset;
   const error = camState[cam.name]?.err;
-  const bgclass = preview ? classes.preview : selected ? (error ? classes.error : classes.success) : dim ?  classes.dim :classes.normal;
-  const activeCamPreset = camIsLive? currentLiveScene.scene.preset===preset.preset:
-                                      camState[cam.name]?.preset.preset === preset.preset;
-  // console.log(
-  //   JSON.stringify({ preview, bgclass, camPreviewScene, name: cam.name, obsScene: camState[cam.name]?.preset.obsScene })
-  // );
+  const bgclass = preview ? classes.preview : selected ? (error ? classes.error : classes.success) : dim ? classes.dim : classes.normal;
+  const activeCamPreset = camIsLive ? currentLiveScene.scene.preset === preset.preset :
+    camState[cam.name]?.preset.preset === preset.preset;
+  
   const hotkey = preset.hotkey === undefined ? '' : preset.hotkey;
   const keylist: string[] = Array.isArray(hotkey) ? hotkey : [hotkey];
+  const buttonName=`${preset.name}${preset.hotkey ? `(${preset.hotkey})` : ''}${activeCamPreset ?' <=':''}`;
 
-  const performButtonClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const rightClick= e?.type === 'contextmenu';
+  // if (buttonName.startsWith('Pulpit'))console.log(
+  //   JSON.stringify({ buttonName, selected, preview, bgclass, cam: cam.name, liveScene: currentLiveScene, obs: preset.obsScene })
+  // );
+  const performButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const rightClick = e?.type === 'contextmenu';
     if (rightClick) {
 
     }
     if (clickTimer.current) {
+      // This is a double click event
       clearTimeout(clickTimer.current);
-      clickTimer.current=undefined;
-      onSingleClick();
+      clickTimer.current = undefined;
       onDoubleClick();
     } else {
-      clickTimer.current = setTimeout(()=>{
+      // wait 300ms to see if a double click is going to happen
+      clickTimer.current = setTimeout(() => {
         clickTimer.current = undefined;
         onSingleClick();
-      },300);
+      }, 300);
     }
   };
 
@@ -86,20 +89,19 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset, dim }) 
   };
 
   const onDoubleClick = () => {
-    if (preset.obsScene) {
-      doOBSTransition();
-    } else if (preset.preset >0) {
-      applyCamPreset(cam, preset);
-    }
+    setPreviewScene(preset.obsScene);
+    applyCamPreset(cam, preset);
+    doOBSTransition();
   };
-  
-  useEffect(()=>{
-    return ()=>{if (clickTimer.current) {
+
+  useEffect(() => {
+    return () => {
+      if (clickTimer.current) {
         clearTimeout(clickTimer.current);
-        clickTimer.current=undefined;
+        clickTimer.current = undefined;
       }
     }
-  },[]);
+  }, []);
 
   useKeypress(keylist, () => {
     onSingleClick();
@@ -108,8 +110,8 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset, dim }) 
   return (
     <div className={classes.root}>
       <Button variant="contained" onClick={performButtonClick} className={bgclass} >
-          {preset.name}{preset.hotkey?`(${preset.hotkey})`:''}{activeCamPreset && ' <='}
-        </Button>
+        {buttonName}
+      </Button>
     </div>
   );
 };
