@@ -49,13 +49,13 @@ export const CameraView: FC<CameraProps> = ({ cam }) => {
   const classes = useStyles();
   const [lastCamSelected] = useLastCamSelected();
   const selectable = cam.name !== lastCamSelected;
-  const realCam = Boolean(cam.ip);
+  const showPTZ = Boolean(cam.showPTZ);
   return (
     <Paper variant="outlined" className={clsx(classes.paper, selectable && classes.selectablePaper)} >
       <Typography className={selectable ? classes.selectableTitle : classes.nonselectableTitle} variant="h5">
         {cam.name}
       </Typography>
-      {realCam &&
+      {showPTZ &&
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <div>
             <CameraMoveButton cam={cam} direction="Left" dim={!selectable} />
