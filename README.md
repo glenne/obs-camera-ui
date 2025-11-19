@@ -27,7 +27,14 @@
 
 ## Apache Server Setup
 
-- [Enabling MacOS apache](https://discussions.apple.com/docs/DOC-3083)
+- See [Enabling MacOS apache](https://discussions.apple.com/docs/DOC-3083)
+- ```sudo vi /etc/apache2/httpd.conf```
+> Uncomment The two userdir references to a module and home directory
+- ```sudo vi /etc/apache2/extra/httpd-userdir.conf```
+> Uncomment the Include /private/etc/apache2/users/*.conf
+- ```sudo apachectl configtest``` Test config changes
+- ```sudo apachectl graceful``` Restart apache
+
 
 For the contents of the /etc/apache2/users/glenne.conf file, use the following:
 
@@ -39,8 +46,6 @@ For the contents of the /etc/apache2/users/glenne.conf file, use the following:
   Require all granted
 </Directory>
 ```
-
-Be sure to edit /private/etc/apache2/extra/httpd-userdir.conf and enable the *.conf include.
 
 The following was needed on one machine:
 
