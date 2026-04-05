@@ -58,7 +58,7 @@ export const CameraPresetButton: FC<CameraPresetProps> = ({ cam, preset, dim }) 
   
   const hotkey = preset.hotkey === undefined ? '' : preset.hotkey;
   const keylist: string[] = Array.isArray(hotkey) ? hotkey : [hotkey];
-  const buttonName=`${preset.name}${preset.hotkey ? `(${preset.hotkey})` : ''}${activeCamPreset ?' <=':''}`;
+  const buttonName=`${preset.name}${preset.hotkey ? `(${preset.hotkey})` : ''}`;
 
   // if (buttonName.startsWith('Pulpit'))console.log(
   //   JSON.stringify({ buttonName, selected, preview, bgclass, cam: cam.name, liveScene: currentLiveScene, obs: preset.obsScene })

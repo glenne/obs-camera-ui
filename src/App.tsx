@@ -11,6 +11,7 @@ import { CameraList, CameraPreset, Configuration, OBSConfig } from './CameraType
 import CameraView from './CameraView';
 import { startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
 import TransitionButton from './TransitionButton';
+import { setNDISource } from './NDISource';
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -119,7 +120,7 @@ const HomeApp = () => {
   };
   return (
     <div className="App" style = { {
-      transform: `scale(0.9)` ,transformOrigin: 'top center'
+      transform: `scale(0.8)` ,transformOrigin: 'top center'
   }}>
       {!obsConnected && <Typography color="error">OBS is not connected!</Typography>}
       <Grid container spacing={0}>
@@ -129,7 +130,31 @@ const HomeApp = () => {
           </Grid>
         ))}
       </Grid>
-      <TransitionButton/>
+      {/* <TransitionButton/> */}
+      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.77', 'WORSHIPMACMINI.LOCAL (OBS)');}}>
+            Ntex=OBS
+      </Button>
+      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.77', 'NARTHEX2 (Intel UHD Graphics 2)');}}>
+            Ntex=PPT
+      </Button>
+      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.76', 'WORSHIPMACMINI.LOCAL (OBS)');}}>
+            FHall=OBS
+      </Button>
+      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.76', 'NARTHEX2 (Intel UHD Graphics 2)');}}>
+            FHall=PPT
+      </Button>
+      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{
+         setNDISource('172.20.1.74', 'WORSHIP1 (NVIDIA GeForce RTX 3060 Ti 3)');
+         setNDISource('172.20.1.75', 'WORSHIP1 (NVIDIA GeForce RTX 3060 Ti 3)');
+        }}>
+            TV=EW
+      </Button>
+      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{
+          setNDISource('172.20.1.74', 'CREWTIMER (,172.20.1.142)');
+          setNDISource('172.20.1.75', 'CREWTIMER (,172.20.1.142)');
+        }}>
+            TV=Alter
+      </Button>
       
       {errorLog.size ? (
         <Paper className={classes.error} variant="outlined">
