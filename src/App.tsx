@@ -1,5 +1,4 @@
 import { CssBaseline, Paper, Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import React, { useEffect} from 'react';
@@ -7,11 +6,10 @@ import { useCookies } from 'react-cookie';
 import { CookiesProvider } from 'react-cookie';
 import './App.css';
 import { logError, setOBSConfig, useCameraList, useErrorLog } from './AppState';
-import { CameraList, CameraPreset, Configuration, OBSConfig } from './CameraTypes';
+import { CameraList, OBSConfig } from './CameraTypes';
 import CameraView from './CameraView';
 import { startOBSMonitor, stopOBSMonitor, useOBSConnected } from './OBS';
-import TransitionButton from './TransitionButton';
-import { setNDISource } from './NDISource';
+import NDISourceButtons from './NDISourceButtons';
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -25,15 +23,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     borderColor: 'red',
   },
-  transition: {
-    margin: theme.spacing(1),
-    alignSelf: 'start'
-  },
 }));
 
 const HomeApp = () => {
   const [cameralist, setCameraList] = useCameraList();
-  const [cookies, setCookie] = useCookies(['config']);
+  const [cookies] = useCookies(['config']);
   const [obsConnected] = useOBSConnected();
   const [errorLog] = useErrorLog();
   const classes = useStyles();
@@ -85,39 +79,6 @@ const HomeApp = () => {
   //   getData('./config.json');
   // }, []);
 
-  const onFileSelected: React.ChangeEventHandler<HTMLInputElement> = (event: any) => {
-    if (event.target.files.length === 0) {
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      const json = event.target.result;
-      const config = JSON.parse(json) as Configuration;
-      if (Array.isArray(config.cams)) {
-        config.cams.forEach((camConfig)=>{
-          if (Array.isArray(camConfig.presets)) {
-            camConfig.presets.forEach((camPreset:CameraPreset)=>{
-              // Insure all fields are defined
-              camPreset.name = camPreset.name || 'Undefined';
-              camPreset.preset = camPreset.preset || 0;
-              camPreset.obsScene = camPreset.obsScene || '';
-              camPreset.hotkey = camPreset.hotkey || '';
-              
-            });
-          } else {
-            logError('File read',"Missing config.cams.presets");
-          }
-      });
-      setCookie('config', json, { path: '/' });
-      setOBSConfig(config.obs as OBSConfig);
-      setCameraList(config.cams as CameraList);
-      } else {
-        logError('File read',"Missing config.cams");
-      }
-      
-    };
-    reader.readAsText(event.target.files[0]);
-  };
   return (
     <div className="App" style = { {
       transform: `scale(0.8)` ,transformOrigin: 'top center'
@@ -131,30 +92,7 @@ const HomeApp = () => {
         ))}
       </Grid>
       {/* <TransitionButton/> */}
-      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.77', 'WORSHIPMACMINI.LOCAL (OBS)');}}>
-            Ntex=OBS
-      </Button>
-      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.77', 'NARTHEX2 (Intel UHD Graphics 2)');}}>
-            Ntex=PPT
-      </Button>
-      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.76', 'WORSHIPMACMINI.LOCAL (OBS)');}}>
-            FHall=OBS
-      </Button>
-      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{await setNDISource('172.20.1.76', 'NARTHEX2 (Intel UHD Graphics 2)');}}>
-            FHall=PPT
-      </Button>
-      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{
-         setNDISource('172.20.1.74', 'WORSHIP1 (NVIDIA GeForce RTX 3060 Ti 3)');
-         setNDISource('172.20.1.75', 'WORSHIP1 (NVIDIA GeForce RTX 3060 Ti 3)');
-        }}>
-            TV=EW
-      </Button>
-      <Button className={classes.transition} size="small" variant="contained" onClick={async ()=>{
-          setNDISource('172.20.1.74', 'CREWTIMER (,172.20.1.142)');
-          setNDISource('172.20.1.75', 'CREWTIMER (,172.20.1.142)');
-        }}>
-            TV=Alter
-      </Button>
+      <NDISourceButtons />
       
       {errorLog.size ? (
         <Paper className={classes.error} variant="outlined">
@@ -165,12 +103,6 @@ const HomeApp = () => {
       ) : (
         <Paper />
       )}
-      <input style={{ display: 'none' }} id="contained-button-file" type="file" onChange={onFileSelected} />
-      <label htmlFor="contained-button-file">
-        <Button size="small" variant="contained" style={{ background: '#808080' }} component="span">
-          Load Configuration
-        </Button>
-      </label>
     </div>
   );
 };
